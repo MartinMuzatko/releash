@@ -68,7 +68,7 @@ const getNextVersion = (deps: { git: SimpleGit, sicon: typeof sicon }) => (branc
     if (!tag) return deps.sicon.getVersionName(branch, '1')
     return deps.sicon.bumpTag(
         deps.sicon.getVersionPrefix(branch),
-        deps.sicon.parseTag(deps.sicon.getVersionPrefix('master'), tag),
+        deps.sicon.parseTag(deps.sicon.getVersionPrefix(branch), tag),
         bumpAmount
     )
 }
