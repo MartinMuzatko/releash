@@ -19,15 +19,15 @@ const isBehindRemote = async (git: SimpleGit) => {
     await git.remote(['update'])
     return (await git.status()).behind > 0
 }
-const createTag = (git: SimpleGit) => async (tag: string) => {
+const createTag = (git: SimpleGit) => async (tag: string, repository: string) => {
     await git.addTag(tag)
-    return git.pushTags()
+    return git.pushTags([repository])
 }
-const createTagIfNotExists = (git: SimpleGit) => async (tag: string) => {
+const createTagIfNotExists = (git: SimpleGit) => async (tag: string, repository: string) => {
     const tags = await findTags(git)(tag)
     const tagExists = !!tags.find(t => t == tag)
     const isBehind = await isBehindRemote(git)
-    if (!isBehind && !tagExists) return await createTag(git)(tag) && true
+    if (!isBehind && !tagExists) return await createTag(git)(tag, repository) && true
     return false
 }
 
@@ -131,8 +131,8 @@ export const getInfo = (deps: Dependencies) => async (branch: string) => {
     return { lastTag, nextTag, changelog }
 }
 
-export const publish = (deps: Dependencies) => async (tag: string) => {
-    return await createTagIfNotExists(deps.git)(tag)
+export const publish = (deps: Dependencies) => async (tag: string, repository: string) => {
+    return await createTagIfNotExists(deps.git)(tag, repository)
 }
 
 const git = simpleGit(withBase('.'))
