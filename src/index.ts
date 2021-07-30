@@ -95,16 +95,16 @@ export const getInfo = (deps: Dependencies) => async (branch: string) => {
             }
         },
         beta: async () => {
-            const lastTag = await findTag(deps.git)('m-*')
-            const nextTag = await getNextVersion(deps)(branch, lastTag, 0)
+            const lastTag = await findTag(deps.git)('m-*') || ''
+            const nextTag = await getNextVersion(deps)(branch, lastTag.replace('m', 'b'), 0)
             return {
                 lastTag,
                 nextTag,
             }
         },
         release: async () => {
-            const lastTag = await findTag(deps.git)('b-*')
-            const nextTag = await getNextVersion(deps)(branch, lastTag, 0)
+            const lastTag = await findTag(deps.git)('b-*') || ''
+            const nextTag = await getNextVersion(deps)(branch, lastTag.replace('b', 'r'), 0)
             return {
                 lastTag,
                 nextTag,
